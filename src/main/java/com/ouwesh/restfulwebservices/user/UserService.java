@@ -21,17 +21,17 @@ public class UserService {
         return users;
     }
 
-    public Integer save(User user) {
+    public User save(User user) {
         if (user.getId() == null) {
             user.setId(users.size() + 1);
         }
         users.add(user);
-        return user.getId();
+        return user;
     }
 
     public User findOne(int id) {
         return users.stream()
                 .filter(user -> user.getId() == id)
-                .findFirst().get();
+                .findFirst().orElseThrow(() -> new UserNotFoundException("id-" + id));
     }
 }
