@@ -32,7 +32,8 @@ public class UserService {
     public User findOne(int id) {
         return users.stream()
                 .filter(user -> user.getId() == id)
-                .findFirst().orElseThrow(() -> new UserNotFoundException("id-" + id));
+                .findFirst()
+                .orElseThrow(() -> new UserNotFoundException("id-" + id));
     }
 
     public User deleteById(int id) {
