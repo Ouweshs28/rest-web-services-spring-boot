@@ -30,7 +30,7 @@ public class UserResource {
 
     @PostMapping
     public ResponseEntity<Void> createUser(@RequestBody User user) {
-        User savedUser =userService.save(user);
+        User savedUser = userService.save(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("{id}")
                 .buildAndExpand(savedUser.getId())
@@ -39,5 +39,9 @@ public class UserResource {
         return ResponseEntity.created(location).build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<User> deleteUser(@PathVariable int id) {
+        return ResponseEntity.ok(userService.deleteById(id));
+    }
 
 }

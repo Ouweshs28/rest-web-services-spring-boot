@@ -34,4 +34,15 @@ public class UserService {
                 .filter(user -> user.getId() == id)
                 .findFirst().orElseThrow(() -> new UserNotFoundException("id-" + id));
     }
+
+    public User deleteById(int id) {
+        User user = findOne(id);
+        if (user == null) {
+            throw new UserNotFoundException("id-" + id);
+        }
+        if (users.remove(user)) {
+            return user;
+        }
+        return null;
+    }
 }
