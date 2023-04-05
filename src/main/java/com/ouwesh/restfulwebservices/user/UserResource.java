@@ -19,8 +19,11 @@ public class UserResource {
 
     private final UserService userService;
 
-    public UserResource(UserService userService) {
+    private final PostService postService;
+
+    public UserResource(UserService userService, PostService postService) {
         this.userService = userService;
+        this.postService = postService;
     }
 
     @GetMapping
@@ -50,6 +53,20 @@ public class UserResource {
     @DeleteMapping("/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable int id) {
         return ResponseEntity.ok(userService.deleteById(id));
+    }
+
+    @GetMapping("{id}/posts")
+    public ResponseEntity<List<Post>> getUserPosts(@PathVariable int id) {
+        return ResponseEntity.ok(userService.getUserPosts(id));
+    }
+
+    @PostMapping("{id}/posts")
+    public ResponseEntity<Void> createUserPost(@PathVariable int id, @RequestBody @Valid Post post) {
+        Post savedPost = postService.save(id, post);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("{id}")
+                .buildAndExpand(savedPost.getId()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
 }

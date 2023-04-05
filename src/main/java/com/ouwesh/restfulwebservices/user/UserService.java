@@ -1,49 +1,40 @@
 package com.ouwesh.restfulwebservices.user;
 
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserService {
 
-    private static List<User> users = new ArrayList<>();
+    private final UserRepository userRepository;
 
-    static {
-        users.add(new User(1, "Ouwesh", LocalDate.of(1999, 1, 28)));
-        users.add(new User(2, "Raj", LocalDate.of(1988, 1, 1)));
-        users.add(new User(3, "Rajesh", LocalDate.of(1988, 1, 1)));
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     public List<User> findAll() {
-        return users;
+        return userRepository.findAll();
     }
 
     public User save(User user) {
-        if (user.getId() == null) {
-            user.setId(users.size() + 1);
-        }
-        users.add(user);
-        return user;
+        return userRepository.save(user);
     }
 
     public User findOne(int id) {
-        return users.stream()
-                .filter(user -> user.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new UserNotFoundException("id-" + id));
+       return userRepository.findById(id)
+               .orElseThrow(() -> new UserNotFoundException("id-" + id));
     }
 
     public User deleteById(int id) {
-        User user = findOne(id);
-        if (user == null) {
-            throw new UserNotFoundException("id-" + id);
-        }
-        if (users.remove(user)) {
-            return user;
-        }
-        return null;
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("id-" + id));
+        userRepository.delete(user);
+        return user;
+    }
+
+    public List<Post> getUserPosts(int id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("id-" + id))
+                .getPosts();
     }
 }
