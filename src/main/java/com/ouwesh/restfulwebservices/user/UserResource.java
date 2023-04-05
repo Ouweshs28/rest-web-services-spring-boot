@@ -2,6 +2,7 @@ package com.ouwesh.restfulwebservices.user;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
+import jakarta.validation.Valid;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class UserResource {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createUser(@RequestBody User user) {
+    public ResponseEntity<Void> createUser(@RequestBody @Valid User user) {
         User savedUser = userService.save(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("{id}")
